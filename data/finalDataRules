@@ -1,0 +1,18 @@
+replaced "^ " with ""
+replace "^Stardate:.*" with ""
+replace "Original Airdate:.&" with ""
+replace "\n\n" with "\n"
+replace "\(.*\)" with " "
+seperate puncuation from words
+
+replace "comm \."" with "comm"
+replace "\\n" with " "
+replace "\n\n" with "\n"
+
+replace ^([A-Z]+) \[.*\]: with \1:
+find ^([A-Z]+): .*: and be sure dialogue is separated
+
+
+Find lines without : and concat with previous
+
+33816 lines edited
