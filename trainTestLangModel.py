@@ -37,7 +37,7 @@ for fold in range(5):
     for line in testingLines:
         speaker, line = line.split(":")
         line = line.split()
-        currSentence=[]
+        currSentence = []
         if speaker == 'COMPUTER':
             model.read(model.compTalk)
             continue
@@ -57,7 +57,7 @@ for fold in range(5):
                     sentenceGuess=model.sentenceCheck(currSentence)
                     if sentenceActual and sentenceGuess:
                         hits += 1
-                        #print(line)
+                        print(currSentence)
                     if sentenceActual:
                         if not sentenceGuess:
                             pass
@@ -86,7 +86,7 @@ for fold in range(5):
     perctGuessed.append(poses/numSentTest)
     perctActual.append(count/numSentTest)
 
-beta=1
+beta=2
 r= sum(recall)/len(recall)
 p=sum(precision)/len(precision)
 f=(1+beta*beta)*(p*r/(r+beta*beta*p))
