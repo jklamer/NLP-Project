@@ -63,12 +63,18 @@ class ComputerLangModel:
         pC = self.percentRefRec(self.state)
         pN = self.percentNRefRec(self.state)
 
-        if pN > pC:
+        if pN >= pC:
             return False
         else:
             return True
 
 
+    def sentenceCheck(self, sentence):
+        numGuess=0
+        for word, guess in sentence:
+            if guess:
+                numGuess+=1
+        return numGuess/len(sentence) >= 0.2
 
     def percentRefRec(self, state):
         if len(state) == 0:

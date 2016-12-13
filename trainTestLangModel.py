@@ -49,15 +49,19 @@ for fold in range(5):
                 myref = not myref
             else:
                 model.read(w)
-                currSentence.append(w)
+                currSentence.append((w,model.guessCurrentRef()))
                 sentenceActual = sentenceActual or myref
-                sentenceGuess = sentenceGuess or model.guessCurrentRef()
-                if w in model.punct or (n >= 1 and line[n] == model.refChar and line[n-1] not in model.punct) :
+                #sentenceGuess = sentenceGuess or model.guessCurrentRef()
+                if w in model.punct or (n == len(line) - 2 and line[len(line)-1] == model.refChar ) or n == len(line)-1 :
                     numSentTest += 1
+                    sentenceGuess=model.sentenceCheck(currSentence)
                     if sentenceActual and sentenceGuess:
                         hits += 1
-                        print(line)
+                        #print(line)
                     if sentenceActual:
+                        if not sentenceGuess:
+                            pass
+                            #print(currSentence)
                         count += 1
                     if sentenceGuess:
                         poses += 1
@@ -82,8 +86,13 @@ for fold in range(5):
     perctGuessed.append(poses/numSentTest)
     perctActual.append(count/numSentTest)
 
+beta=1
+r= sum(recall)/len(recall)
+p=sum(precision)/len(precision)
+f=(1+beta*beta)*(p*r/(r+beta*beta*p))
 #print(model.counts[('computer',',')])
 print("Recall "+ str(sum(recall)/len(recall)))
 print("Precision " + str(sum(precision)/len(precision)))
+print("F{} {}".format(beta,f))
 print("Perentage Sentences Guessed "+ str(sum(perctGuessed)/len(perctGuessed)))
 print("Percentgage Sentence Actual "+ str(sum(perctActual)/len(perctGuessed)))
