@@ -9,7 +9,7 @@ perctActual=[]
 lineMax= 33820
 
 for fold in range(5):
-    model = CLP(ngram=5)
+    model = CLP(ngram=5, tgram=4)
     prevSpeaker=""
     i = 0
     myref = False
@@ -40,24 +40,30 @@ for fold in range(5):
         currSentence = []
         if speaker == 'COMPUTER':
             model.read(model.compTalk)
+            model.readTag(model.compTalk)
             continue
         if speaker != prevSpeaker:
             model.read(model.newSpeak)
+            model.readTag(model.newSpeak)
             prevSpeaker = speaker
         for n, w in enumerate(line):
             if w == model.refChar:
                 myref = not myref
             else:
                 model.read(w)
-                currSentence.append((w,model.guessCurrentRef()))
+                guess= model.guessCurrentRef()
+                currSentence.append((w,guess))
                 sentenceActual = sentenceActual or myref
-                #sentenceGuess = sentenceGuess or model.guessCurrentRef()
+                sentenceGuess = sentenceGuess or guess  #model.guessCurrentRef()
                 if w in model.punct or (n == len(line) - 2 and line[len(line)-1] == model.refChar ) or n == len(line)-1 :
                     numSentTest += 1
-                    sentenceGuess=model.sentenceCheck(currSentence)
+                    #sentenceGuess = model.sentenceCheck(currSentence)
                     if sentenceActual and sentenceGuess:
                         hits += 1
-                        print(currSentence)
+                        for word, myGuess in currSentence:
+                            print(word, end=" ")
+                        print()
+                        #print( word[0] currSentence)
                     if sentenceActual:
                         if not sentenceGuess:
                             pass
@@ -68,6 +74,10 @@ for fold in range(5):
                     sentenceGuess = False
                     sentenceActual = False
                     currSentence=[]
+                if guess:
+                    model.readTag(model.refChar)
+                else:
+                    model.readTag(model.notrefChar)
 
         sentenceGuess = False
         sentenceActual = False
@@ -86,7 +96,7 @@ for fold in range(5):
     perctGuessed.append(poses/numSentTest)
     perctActual.append(count/numSentTest)
 
-beta=2
+beta = 2
 r= sum(recall)/len(recall)
 p=sum(precision)/len(precision)
 f=(1+beta*beta)*(p*r/(r+beta*beta*p))
