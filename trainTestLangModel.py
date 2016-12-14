@@ -8,6 +8,7 @@ perctGuessed=[]
 perctActual=[]
 lineMax= 33820
 
+print("___All correctly recognized lines___")
 for fold in range(5):
     model = CLP(ngram=5, tgram=4)
     prevSpeaker=""
